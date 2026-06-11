@@ -1,34 +1,21 @@
-package quvoncuz.events.listener;
+package quvoncuz.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.stereotype.Component;
-import quvoncuz.config.RabbitMQConfig;
-import quvoncuz.enums.EventType;
-import quvoncuz.events.*;
-import quvoncuz.service.EmailService;
-
-import java.io.IOException;
+import org.springframework.stereotype.Service;
+import quvoncuz.events.NotificationEvent;
+import quvoncuz.events.StatisticsEvent;
 
 @Slf4j
-@Component
+@Service
 @RequiredArgsConstructor
-public class NotificationListener {
+public class EventService {
 
     private final EmailService emailService;
-    private final ObjectMapper mapper;
+    private final StatisticsService statisticsService;
 
-    @RabbitListener(queues = RabbitMQConfig.NOTIFICATION_QUEUE)
-    public void handleNotification(Message message) {
+    public void handleNotification(NotificationEvent event) {
         try {
-
-            JsonNode root = mapper.readTree(message.getBody());
-
-            NotificationEvent event = mapper.treeToValue(root, NotificationEvent.class);
             switch (event.getEventType()) {
                 case TOUR_CREATED -> {
 
@@ -76,12 +63,22 @@ public class NotificationListener {
                                     "Tur: " + event.getSubjectName()
                     );
                 }
-                default -> log.warn("Noma'lum event type");
+                default -> log.warn("Unknown event type");
             }
 
-        } catch (IOException e) {
-            log.error("Notification xatosi: {}", e.getMessage());
-            throw new RuntimeException("Xato: " + e.getMessage());
+        } catch (Exception e) {
+            log.error("Notification error: {}", e.getMessage());
+            throw new RuntimeException("Error: " + e.getMessage());
+        }
+    }
+
+    public void handleStatistics(StatisticsEvent event) {
+        try {
+            log.info("Received event: {}", event);
+            statisticsService.save(event.getEventType(), event);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

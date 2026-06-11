@@ -1,0 +1,14 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: tour-agency
+          uri: lb://tour-agency
+          predicates:
+            - Path=/api/v1/**
+  security:
+    jwt:
+      access-key: TourAgencyVeryveryLongAccessSecretkeyForJwtTokenGeneRationAndValidatiOnYouCanchangeItButYouCanFindThissecretKey

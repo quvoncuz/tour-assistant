@@ -1,18 +1,10 @@
-server:
-  port: 8080
-
 spring:
   application:
     name: api-gateway
-  cloud:
-    gateway:
-      server:
-        webmvc:
-          routes:
-          - id: tour-agency
-            uri: lb://tour-agency
-            predicates:
-              - Path=/api/v1/**
+  config:
+    import: configserver:http://localhost:8888
+  main:
+    web-application-type: reactive
 
 eureka:
   client:
