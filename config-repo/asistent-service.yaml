@@ -1,0 +1,31 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tourasistent
+    username: quvoncuz
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  mail:
+    host: smtp.mail.ru
+    port: 465
+    username: quvoncuz@mail.ru
+    password: 9xhCpYZdgMIyJh1Vp6AG
+    protocol: smtps
+    properties:
+      mail:
+        smtp:
+          auth: true
