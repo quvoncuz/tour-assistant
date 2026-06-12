@@ -16,6 +16,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
   rabbitmq:
     host: localhost
     port: 5672
@@ -24,10 +28,24 @@ spring:
     virtual-host: /
   security:
     jwt:
-      access-key: TourAgencyVeryveryLongAccessSecretkeyForJwtTokenGeneRationAndValidatiOnYouCanchangeItButYouCanFindThissecretKey
+      access-key: TourAgencyVeryveryLongAccessSecretkeyForJwtTokenGeneRationAndValidatiOnYouCanchangeItButYouCanFindThissecretKe
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      asistent-service:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+  timelimiter:
+    instances:
+      asistent-service:
+        timeout-duration: 3s
 
 click:
   base-url: https://my.click.uz/services/pay
-  service-id: 12
-  merchant-id: 12
+  service-id: 123
+  merchant-id: 123
   secret-key: mc
