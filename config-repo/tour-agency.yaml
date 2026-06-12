@@ -28,7 +28,7 @@ spring:
     virtual-host: /
   security:
     jwt:
-      access-key: TourAgencyVeryveryLongAccessSecretkeyForJwtTokenGeneRationAndValidatiOnYouCanchangeItButYouCanFindThissecretKe
+      access-key: TourAgencyVeryveryLongAccessSecretkeyForJwtTokenGeneRationAndValidatiOnYouCanchangeItButYouCanFindThissecretKey
 
 resilience4j:
   circuitbreaker:
@@ -43,6 +43,11 @@ resilience4j:
     instances:
       asistent-service:
         timeout-duration: 3s
+  retry:
+    instances:
+      asistent-service:
+        max-attempts: 3
+        wait-duration: 1s
 
 click:
   base-url: https://my.click.uz/services/pay
