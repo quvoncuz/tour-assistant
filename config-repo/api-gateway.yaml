@@ -2,13 +2,43 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: api-gateway
+  config:
+    import: "optional:configserver:http://localhost:8888"
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
+      # Misol tariqasida marshrutlar. O'zingiznikiga qarab moslab olasiz
       routes:
         - id: tour-agency
           uri: lb://tour-agency
           predicates:
-            - Path=/api/v1/**
-  security:
-    jwt:
-      access-key: TourAgencyVeryveryLongAccessSecretkeyForJwtTokenGeneRationAndValidatiOnYouCanchangeItButYouCanFindThissecretKey
+            - Path=/tour/**
+        - id: asistent-service
+          uri: lb://asistent-service
+          predicates:
+            - Path=/assistant/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"

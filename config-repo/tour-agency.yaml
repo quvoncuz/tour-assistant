@@ -4,11 +4,20 @@ server:
     context-path: /api/v1
 
 spring:
+  application:
+    name: tour-agency
+  config:
+    import: "optional:configserver:http://localhost:8888"
+
+  main:
+    allow-bean-definition-overriding: true
+
   datasource:
     url: jdbc:postgresql://localhost:5432/touragency
     username: quvoncuz
     password: root
     driver-class-name: org.postgresql.Driver
+
   jpa:
     show-sql: true
     hibernate:
@@ -16,19 +25,41 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
   cloud:
     openfeign:
       circuitbreaker:
         enabled: true
+
   rabbitmq:
     host: localhost
     port: 5672
     username: guest
     password: guest
     virtual-host: /
+
   security:
     jwt:
-      access-key: TourAgencyVeryveryLongAccessSecretkeyForJwtTokenGeneRationAndValidatiOnYouCanchangeItButYouCanFindThissecretKe
+      access-key: TourAgencyVeryveryLongAccessSecretkeyForJwtTokenGeneRationAndValidatiOnYouCanchangeItButYouCanFindThissecretKey
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
+  tracing:
+    sampling:
+      probability: 1.0
+    context-propagation:
+      enabled: true
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
 
 resilience4j:
   circuitbreaker:
@@ -43,9 +74,18 @@ resilience4j:
     instances:
       asistent-service:
         timeout-duration: 3s
+  retry:
+    instances:
+      asistent-service:
+        max-attempts: 3
+        wait-duration: 1s
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
 click:
   base-url: https://my.click.uz/services/pay
   service-id: 123
   merchant-id: 123
-  secret-key: mc
+  secret-key: mc_
