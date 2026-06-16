@@ -11,3 +11,11 @@ spring:
       server:
         native:
           search-locations: file:///home/quvoncuz/Desktop/Java/asistent/config-repo/
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0   # 100% — development uchun. Prod da 0.1 yoki 0.2
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans

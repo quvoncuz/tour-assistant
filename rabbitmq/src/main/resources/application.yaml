@@ -2,6 +2,11 @@ server:
   port: 8082
 
 spring:
+  application:
+    name: asistent-service
+#  config:
+#    import: "optional:configserver:http://localhost:8888"
+
   datasource:
     url: jdbc:postgresql://localhost:5432/tourasistent
     username: quvoncuz
@@ -55,3 +60,8 @@ management:
 logging:
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

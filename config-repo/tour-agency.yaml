@@ -4,11 +4,6 @@ server:
     context-path: /api/v1
 
 spring:
-  application:
-    name: tour-agency
-  config:
-    import: "optional:configserver:http://localhost:8888"
-
   main:
     allow-bean-definition-overriding: true
 
@@ -42,10 +37,9 @@ spring:
     jwt:
       access-key: TourAgencyVeryveryLongAccessSecretkeyForJwtTokenGeneRationAndValidatiOnYouCanchangeItButYouCanFindThissecretKey
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
+  zipkin:
+    sender:
+      type: web
 
 management:
   endpoints:
@@ -53,6 +47,7 @@ management:
       exposure:
         include: refresh
   tracing:
+    enabled: true
     sampling:
       probability: 1.0
     context-propagation:
@@ -60,6 +55,8 @@ management:
   zipkin:
     tracing:
       endpoint: http://localhost:9411/api/v2/spans
+      connect-timeout: 1s
+      read-timeout: 10s
 
 resilience4j:
   circuitbreaker:
